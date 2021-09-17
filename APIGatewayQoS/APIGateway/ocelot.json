@@ -1,0 +1,28 @@
+﻿{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/values",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/values",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5000
+        }
+      ],
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2,
+        "DurationOfBreak": 50000,
+        "TimeoutValue": 2000
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false,
+      "QuotaExceededMessage": "Hey, you request too many times, slow down!!!",
+      "HttpStatusCode": 999
+    }
+  }
+}
