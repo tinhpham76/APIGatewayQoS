@@ -1,15 +1,22 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Net.Http;
 using Polly;
 using Polly.Extensions.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using TestCircuitBreaker.Interfaces;
+using TestCircuitBreaker.Resilients;
 
-namespace APIServices
+namespace TestCircuitBreaker
 {
     public class Startup
     {
@@ -27,8 +34,14 @@ namespace APIServices
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIServices", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TestCircuitBreaker", Version = "v1" });
             });
+
+            //services.AddHttpClient();
+
+            services.AddHttpClient<IHttpPolly, HttpPolly>()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))  //Set lifetime to five minutes
+                .AddPolicyHandler(GetRetryPolicy());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,7 +51,7 @@ namespace APIServices
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIServices v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TestCircuitBreaker v1"));
             }
 
             app.UseRouting();
@@ -51,7 +64,7 @@ namespace APIServices
             });
         }
 
-        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
         {
             return HttpPolicyExtensions
                 .HandleTransientHttpError()

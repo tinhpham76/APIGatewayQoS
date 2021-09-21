@@ -1,14 +1,14 @@
 ﻿{
   "Routes": [
     {
-      "UpstreamPathTemplate": "/api/values",
+      "UpstreamPathTemplate": "/api/errors",
       "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/values",
+      "DownstreamPathTemplate": "/api/errors",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5000
+          "Port": 5001
         }
       ],
       "QoSOptions": {

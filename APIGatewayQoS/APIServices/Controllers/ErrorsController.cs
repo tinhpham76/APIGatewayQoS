@@ -10,34 +10,27 @@ namespace APIServices.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ValuesController : ControllerBase
+    public class ErrorsController : ControllerBase
     {
         private static int _count = 0;
 
+        private readonly ILogger<ErrorsController> _logger;
 
-        private readonly ILogger<ValuesController> _logger;
-
-        public ValuesController(ILogger<ValuesController> logger)
+        public ErrorsController(ILogger<ErrorsController> logger)
         {
             _logger = logger;
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
             _count++;
             System.Console.WriteLine($"get...{_count}");
-            if (_count <= 3)
+            if (_count >= 3)
             {
-                Thread.Sleep(5000);
+                return NotFound();
             }
-            return new string[] { "value1", "value2" };
-        }
-
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+            return Ok( new string[] { "value1", "value2" });
         }
     }
 }
