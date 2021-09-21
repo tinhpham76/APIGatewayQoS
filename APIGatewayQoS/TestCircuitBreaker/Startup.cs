@@ -42,6 +42,10 @@ namespace TestCircuitBreaker
             services.AddHttpClient<IHttpPolly, HttpPolly>()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))  //Set lifetime to five minutes
                 .AddPolicyHandler(GetRetryPolicy());
+
+            services.AddHttpClient<IHttpPolly1, HttpPolly1>()
+              .SetHandlerLifetime(TimeSpan.FromMinutes(5))  //Set lifetime to five minutes
+              .AddPolicyHandler(GetRetryPolicy());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

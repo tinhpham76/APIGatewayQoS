@@ -15,12 +15,15 @@ namespace TestCircuitBreaker.Controllers
     public class CircuitBreakersController : ControllerBase
     {
         private readonly IHttpPolly _httpPoly;
+        private readonly IHttpPolly1 _httpPoly1;
         private readonly HttpClient _httpClient;
         private readonly ILogger<CircuitBreakersController> _logger;
-        public CircuitBreakersController(IHttpPolly httpPoly,
+        public CircuitBreakersController(IHttpPolly1 httpPolly1,
+            IHttpPolly httpPoly,
             ILogger<CircuitBreakersController> logger,
             HttpClient httpClient)
         {
+            _httpPoly1 = httpPolly1;
             _httpPoly = httpPoly;
             _httpClient = httpClient;
             _logger = logger;
@@ -46,6 +49,14 @@ namespace TestCircuitBreaker.Controllers
         public async Task<IActionResult> Polly()
         {
             var result = await _httpPoly.CallApi();
+
+            return Ok(result);
+        }
+
+        [HttpGet("polly1")]
+        public async Task<IActionResult> Polly1()
+        {
+            var result = await _httpPoly1.CallApi();
 
             return Ok(result);
         }
